@@ -15,6 +15,7 @@
 
 #include <material_symbols.h>
 #include <wifi_manager.h>
+#include "esp32_music.h"
 #include <wifi_station.h>
 #include <ssid_manager.h>
 #include "afsk_demod.h"
@@ -363,4 +364,10 @@ std::string WifiBoard::GetDeviceStatusJson() {
     cJSON_free(str);
     cJSON_Delete(root);
     return result;
+}
+
+
+// Music player interface
+Esp32Music* WifiBoard::GetMusic() {
+    return music_;
 }
