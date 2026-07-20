@@ -6,6 +6,8 @@
 #include <freertos/event_groups.h>
 #include <esp_timer.h>
 
+class Esp32Music;
+
 class WifiBoard : public Board {
 protected:
     esp_timer_handle_t connect_timer_ = nullptr;
@@ -64,6 +66,12 @@ public:
      * Check if in WiFi config mode
      */
     bool IsInWifiConfigMode() const;
+
+    /**
+     * Get the music player instance
+     */
+    virtual Esp32Music* GetMusic() override;
+    Esp32Music* music_ = nullptr;
 };
 
 #endif // WIFI_BOARD_H
