@@ -70,7 +70,7 @@ public:
     /**
      * Get the music player instance
      */
-    virtual Esp32Music* GetMusic() override;
+    virtual Music* GetMusic() override;
     Esp32Music* music_ = nullptr;
 };
 
