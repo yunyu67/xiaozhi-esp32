@@ -13,7 +13,7 @@
 
 // MP3解码器支持
 extern "C" {
-#include "mp3dec.h"
+#include "minimp3/mp3dec.h"
 }
 
 // 音频数据块结构
