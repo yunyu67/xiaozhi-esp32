@@ -6,7 +6,7 @@
 #include <freertos/event_groups.h>
 #include <esp_timer.h>
 
-class Esp32Music;
+#include "esp32_music.h"
 
 class WifiBoard : public Board {
 protected:
