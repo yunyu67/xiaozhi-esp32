@@ -112,11 +112,6 @@ void LvglDisplay::ClearTextGlyphs() {
 }
 
 
-    if (icon_str != nullptr) {
-        ShowNotification(icon_str, 2000);
-    }
-}
-
 LvglDisplay::~LvglDisplay() {
     if (notification_timer_ != nullptr) {
         esp_timer_stop(notification_timer_);
@@ -362,4 +357,5 @@ bool LvglDisplay::SnapshotToJpeg(std::string& jpeg_data, int quality) {
     return false;
 #endif
 }
+
 
