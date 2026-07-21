@@ -12,6 +12,7 @@
 #include "dynamic_glyph_cache.h"
 #include "jpg/image_to_jpeg.h"
 #include "lvgl_display.h"
+#include "font_awesome_symbols.h"
 #include "lvgl_theme.h"
 #include "settings.h"
 
@@ -109,6 +110,34 @@ void LvglDisplay::ClearTextGlyphs() {
     }
     DisplayLockGuard lock(this);
     dynamic_glyph_cache_->Clear();
+}
+
+
+void LvglDisplay::SetIcon(uint16_t icon) {
+    const char* icon_str = nullptr;
+    switch (icon) {
+        case FONT_AWESOME_DOWNLOAD:
+            icon_str = MATERIAL_SYMBOLS_DOWNLOAD;
+            break;
+        case FONT_AWESOME_CIRCLE_CHECK:
+            icon_str = MATERIAL_SYMBOLS_CHECK_CIRCLE;
+            break;
+        case FONT_AWESOME_EXCLAMATION:
+            icon_str = MATERIAL_SYMBOLS_WARNING;
+            break;
+        case FONT_AWESOME_SAD:
+            icon_str = MATERIAL_SYMBOLS_MOOD_BAD;
+            break;
+        case FONT_AWESOME_HAPPY:
+            icon_str = MATERIAL_SYMBOLS_SENTIMENT_VERY_SATISFIED;
+            break;
+        default:
+            icon_str = nullptr;
+            break;
+    }
+    if (icon_str != nullptr) {
+        ShowNotification(icon_str, 2000);
+    }
 }
 
 LvglDisplay::~LvglDisplay() {
@@ -356,3 +385,4 @@ bool LvglDisplay::SnapshotToJpeg(std::string& jpeg_data, int quality) {
     return false;
 #endif
 }
+
