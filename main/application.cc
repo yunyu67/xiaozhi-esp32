@@ -5,7 +5,6 @@
 #include "audio_codec.h"
 #include "mqtt_protocol.h"
 #include "websocket_protocol.h"
-#include "font_awesome_symbols.h"
 #include "assets/lang_config.h"
 #include "mcp_server.h"
 
@@ -117,7 +116,6 @@ void Application::CheckNewVersion(Ota &ota)
 
             SetDeviceState(kDeviceStateUpgrading);
 
-            display->SetIcon(FONT_AWESOME_DOWNLOAD);
             std::string message = std::string(Lang::Strings::NEW_VERSION) + ota.GetFirmwareVersion();
             display->SetChatMessage("system", message.c_str());
 
