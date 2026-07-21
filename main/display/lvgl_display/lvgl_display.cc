@@ -126,10 +126,10 @@ void LvglDisplay::SetIcon(uint16_t icon) {
             icon_str = MATERIAL_SYMBOLS_WARNING;
             break;
         case FONT_AWESOME_SAD:
-            icon_str = MATERIAL_SYMBOLS_MOOD_BAD;
+            icon_str = MATERIAL_SYMBOLS_SENTIMENT_DISSATISFIED;
             break;
         case FONT_AWESOME_HAPPY:
-            icon_str = MATERIAL_SYMBOLS_SENTIMENT_VERY_SATISFIED;
+            icon_str = MATERIAL_SYMBOLS_SENTIMENT_SATISFIED;
             break;
         default:
             icon_str = nullptr;
