@@ -113,28 +113,6 @@ void LvglDisplay::ClearTextGlyphs() {
 }
 
 
-void LvglDisplay::SetIcon(uint16_t icon) {
-    const char* icon_str = nullptr;
-    switch (icon) {
-        case FONT_AWESOME_DOWNLOAD:
-            icon_str = MATERIAL_SYMBOLS_DOWNLOAD;
-            break;
-        case FONT_AWESOME_CIRCLE_CHECK:
-            icon_str = MATERIAL_SYMBOLS_CHECK_CIRCLE;
-            break;
-        case FONT_AWESOME_EXCLAMATION:
-            icon_str = MATERIAL_SYMBOLS_WARNING;
-            break;
-        case FONT_AWESOME_SAD:
-            icon_str = MATERIAL_SYMBOLS_SENTIMENT_DISSATISFIED;
-            break;
-        case FONT_AWESOME_HAPPY:
-            icon_str = MATERIAL_SYMBOLS_SENTIMENT_SATISFIED;
-            break;
-        default:
-            icon_str = nullptr;
-            break;
-    }
     if (icon_str != nullptr) {
         ShowNotification(icon_str, 2000);
     }
