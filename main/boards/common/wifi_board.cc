@@ -368,6 +368,6 @@ std::string WifiBoard::GetDeviceStatusJson() {
 
 
 // Music player interface
-Esp32Music* WifiBoard::GetMusic() {
+Music* WifiBoard::GetMusic() {
     return music_;
 }
