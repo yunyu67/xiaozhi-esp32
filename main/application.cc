@@ -817,13 +817,16 @@ void Application::HandleWakeWordDetectedEvent() {
     auto state = GetDeviceState();
     auto wake_word = audio_service_.GetLastWakeWord();
     ESP_LOGI(TAG, "Wake word detected: %s (state: %d)", wake_word.c_str(), (int)state);
-    // Music DND mode check
-    auto board = Board::GetInstance();
-    auto music = board.GetMusic();
-    if (music && music->IsDndModeEnabled() && music->IsDownloading()) {
-        ESP_LOGI(TAG, "Wake word detected during music playback - DND mode active, deferring");
-        music->SignalWakeWord();
-        return;
+
+    // Music DND mode: if music is playing in DND mode, remember wake word for later
+    {
+        auto& board = Board::GetInstance();
+        auto music = board.GetMusic();
+        if (music && music->IsDndModeEnabled() && music->IsDownloading()) {
+            ESP_LOGI(TAG, "Music DND active, deferring wake word");
+            music->SignalWakeWord();
+            return;
+        }
     }
 
     if (state == kDeviceStateIdle) {
@@ -913,31 +916,34 @@ void Application::ContinueWakeWordInvoke(const std::string& wake_word) {
 }
 
 void Application::HandleStateChangedEvent() {
+    static DeviceState previous_state_ = kDeviceStateUnknown;
     DeviceState new_state = state_machine_.GetState();
     clock_ticks_ = 0;
-    static DeviceState previous_state_ = kDeviceStateUnknown;
-
-    auto& board_music = Board::GetInstance();
-    auto music = board_music.GetMusic();
-
-    if (previous_state_ == kDeviceStateIdle && new_state != kDeviceStateIdle && music) {
-        if (music->IsDndModeEnabled() && music->IsDownloading()) {
-            ESP_LOGI(TAG, "Music DND mode active - keeping music playing: %d -> %d", (int)previous_state_, (int)new_state);
-            music->SignalWakeWord();
-        } else {
-            music->StopStreaming();
-        }
-    }
-    if (new_state == kDeviceStateIdle && music && music->HasPendingWakeWord()) {
-        ESP_LOGI(TAG, "Processing pending wake word after music");
-        music->ClearPendingWakeWord();
-        xEventGroupSetBits(event_group_, MAIN_EVENT_WAKE_WORD_DETECTED);
-    }
-    previous_state_ = new_state;
-
     // Any state change invalidates a pending deferred listening start;
     // the Listening case below re-arms it when needed.
     pending_listening_start_ = false;
+
+    // Music DND: when leaving Idle, pause music (unless DND keeps it playing)
+    {
+        auto& board = Board::GetInstance();
+        auto music = board.GetMusic();
+        if (previous_state_ == kDeviceStateIdle && new_state != kDeviceStateIdle && music) {
+            if (music->IsDndModeEnabled() && music->IsDownloading()) {
+                ESP_LOGI(TAG, "Music DND: keeping music playing through %d -> %d",
+                         (int)previous_state_, (int)new_state);
+                music->SignalWakeWord();
+            } else {
+                music->StopStreaming();
+            }
+        }
+        // When back to Idle and we have a pending wake word from DND, fire it
+        if (new_state == kDeviceStateIdle && music && music->HasPendingWakeWord()) {
+            ESP_LOGI(TAG, "Music DND: processing deferred wake word");
+            music->ClearPendingWakeWord();
+            xEventGroupSetBits(event_group_, MAIN_EVENT_WAKE_WORD_DETECTED);
+        }
+    }
+    previous_state_ = new_state;
 
     auto& board = Board::GetInstance();
     auto display = board.GetDisplay();
@@ -1066,8 +1072,8 @@ void Application::Reboot() {
 }
 
 bool Application::UpgradeFirmware(const std::string& url, const std::string& version) {
-    auto& board2 = Board::GetInstance();
-    auto display = board2.GetDisplay();
+    auto& board = Board::GetInstance();
+    auto display = board.GetDisplay();
 
     std::string upgrade_url = url;
     std::string version_info = version.empty() ? "(Manual upgrade)" : version;
@@ -1207,12 +1213,6 @@ void Application::SetAecMode(AecMode mode) {
 }
 
 void Application::PlaySound(const std::string_view& sound) { audio_service_.PlaySound(sound); }
-void Application::AddAudioData(AudioStreamPacket&& packet) {
-    auto& board = Board::GetInstance();
-    auto music = board.GetMusic();
-    if (music) { music->AddAudioData(std::move(packet)); }
-}
-
 
 void Application::ResetProtocol() {
     Schedule([this]() {
