@@ -27,7 +27,6 @@ public:
     virtual void SetPreviewImage(std::unique_ptr<LvglImage> image);
     virtual void UpdateStatusBar(bool update_all = false);
     virtual void SetPowerSaveMode(bool on);
-    virtual void SetIcon(uint16_t icon) override;
     virtual bool SnapshotToJpeg(std::string& jpeg_data, int quality = 80);
     virtual bool AddTextGlyphs(const std::vector<TextGlyph>& glyphs, uint8_t bpp) override;
     virtual void ClearTextGlyphs() override;
