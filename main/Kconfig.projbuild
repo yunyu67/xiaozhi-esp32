@@ -538,6 +538,9 @@ choice BOARD_TYPE
         bool "征辰科技AI Camera"
         depends on IDF_TARGET_ESP32S3
     config BOARD_TYPE_ZHENGCHEN_CAM_ML307
+    config BOARD_TYPE_ZHENGCHEN_MINICAM
+        bool "zhengchen-minicam"
+        depends on IDF_TARGET_ESP32S3
         bool "征辰科技AI Camera(ML307)"
 	    depends on IDF_TARGET_ESP32S3
     config BOARD_TYPE_MINSI_K08_DUAL
