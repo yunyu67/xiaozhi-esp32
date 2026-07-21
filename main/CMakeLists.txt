@@ -1090,7 +1090,7 @@ idf_component_register(SRCS ${SOURCES}
 if(NOT BOARD_NAME)
     set(BOARD_NAME ${BOARD_TYPE})
 endif()
-string(REGEX MATCH "^font_noto_sans_basic_([0-9]+)_([0-9]+)$" _font_match "${BUILTIN_TEXT_FONT}")
+string(REGEX MATCH "^font_[a-z_]+_([0-9]+)_([0-9]+)$" _font_match "${BUILTIN_TEXT_FONT}")
 if(NOT _font_match)
     message(FATAL_ERROR "Unsupported built-in text font name: ${BUILTIN_TEXT_FONT}")
 endif()
