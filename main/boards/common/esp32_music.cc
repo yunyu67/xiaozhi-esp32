@@ -13,6 +13,7 @@
 
 #include <cJSON.h>
 #include <cstring>
+#include <cstdint>
 #include <chrono>
 #include <sstream>
 #include <algorithm>
@@ -128,7 +129,7 @@ static std::string generate_dynamic_key(int64_t timestamp)
 
     // SHA256哈希
     unsigned char hash[32];
-    esp32_music_sha256((unsigned char *)data.c_str(), data.length(), hash, 0);
+    esp32_music_sha256((const uint8_t*)data.c_str(), data.length(), hash);
 
     // 转换为十六进制字符串（前16字节）
     std::string key;
