@@ -12,7 +12,6 @@
 #include "dynamic_glyph_cache.h"
 #include "jpg/image_to_jpeg.h"
 #include "lvgl_display.h"
-#include "font_awesome_symbols.h"
 #include "lvgl_theme.h"
 #include "settings.h"
 
